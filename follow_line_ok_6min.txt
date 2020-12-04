@@ -1,0 +1,107 @@
+from GUI import GUI
+from HAL import HAL
+
+import threading
+import time
+from datetime import datetime
+import math
+import cv2
+import numpy as np
+
+font = cv2.FONT_HERSHEY_SIMPLEX
+
+time_cycle = 80
+witdh = 640
+mid = 320
+last_center_line = 0
+
+# Constantes de giro - kp más alta corrige más
+kp = 0.04       ## valores para 20 m/s --> 0.019
+kd = 0.015        ## valores para 20 m/s --> 0.011
+last_error = 0
+
+# Constantes de Velocidad
+kpv = 0.05    ## valores para 20 m/s --> 0.09
+kdv = 0.06   ## valores para 20 m/s --> 0.003
+vel_max = 1  ## probado con 20 m/s
+last_vel = 0
+
+threshold_image = np.zeros((640,360,3), np.uint8)
+color_image = np.zeros((640,360,3), np.uint8)
+lock = threading.Lock()
+threshold_image_lock = threading.Lock()
+color_image_lock = threading.Lock()
+
+
+while True:
+    
+    img = HAL.getImage()
+    GUI.showImage(img)
+    #processed img
+    img = img[220:]
+    img_proc = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    line_pre_proc = cv2.inRange(img_proc, (0, 150, 100), (0, 255, 255))
+    _, mask = cv2.threshold(line_pre_proc, 240, 255, cv2.THRESH_BINARY)
+    #GUI.showImage(mask)
+    
+    # Get 3 lines from the image.
+    wall = img[12][320][0]
+    line = mask[50,:]
+    base = mask[250,:]
+    #GUI.showImage(mask)
+    
+    try:
+        # Se calcula el centro de la línea roja en la imagen segmentada (valores a 255,255,255)
+        line_center = np.divide(np.max(np.nonzero(line)) - np.min(np.nonzero(line)), 2)
+        #base_center = np.divide(np.max(np.nonzero(base)) - np.min(np.nonzero(base)), 2)
+        line_center = np.min(np.nonzero(line)) + line_center
+        #base_center = np.min(np.nonzero(base)) + base_center
+    except ValueError:
+        line_center = last_center_line
+    
+    
+    error_line = np.subtract(mid, line_center).item()
+    global last_error
+    global vel_max
+    global last_vel
+    
+    # PID para giro
+    giro = kp * error_line + kd * (error_line - last_error)
+    #console.print(giro/10)
+    HAL.motors.sendW(giro/10)
+    # HAL.motors.sendV(1)
+    
+    # PID velocidad
+    vel_error = kpv * abs(error_line) + abs(kdv * (error_line - last_error))
+    console.print(vel_error)
+     # Control de velocidad
+    if abs(error_line) in range(0, 15) and wall >= 178:
+        HAL.motors.sendV(vel_max)
+    elif wall in range(0,179):
+        if wall < 50:
+            brake = 10
+        else:
+            brake = 5
+        vel_correccion = abs(vel_max - vel_error - brake)
+        HAL.motors.sendV(vel_correccion/10)
+    elif wall == 0:
+
+        vel_correccion = abs(vel_max - vel_error - (2 * brake))
+        HAL.motors.sendV(vel_correccion/10)
+    else:
+        pass
+
+    last_error = error_line
+    last_vel = vel_max
+   
+    
+    #self.set_threshold_image(img_proc)
+    img = np.copy(img_proc)
+    if len(img.shape) == 2:
+      img = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
+      threshold_image_lock.acquire()
+      threshold_image = img
+      threshold_image_lock.release()
+    
+    
+        
