@@ -1,0 +1,29 @@
+Robotics Academy
+
+Comandos ROSnodes 2.1
+
+cd/Academy/RoboticsAcademy/exercises/follow_line
+
+roslaunch ./launch/simple_line_follower_ros.launch
+
+python2 ./follow_line.py follow_line_conf.yml
+
+
+WebTemplates 2.3
+
+docker pull jderobot/robotics-academy
+
+docker run -it -p 8080:8080 -p 7681:7681 -p 2303:2303 -p 1905:1905 -p 8765:8765 jderobot/robotics-academy python3.8 manager.py
+
+entrar en el index del ejercicio
+
+
+
+
+Unibotics
+entrar con mi usuario
+
+docker pull jderobot/robotics-academy:latest
+
+
+docker run -it --name=RoboticsAcademy -p 8080:8080 -p 7681:7681 -p 2303:2303 -p 1905:1905 -p 8765:8765 jderobot/robotics-academy:latest python3.8 manager.py
