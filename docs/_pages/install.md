@@ -38,9 +38,7 @@ ROSnode https://jderobot.github.io/RoboticsAcademy/installation/#generic-infrast
 
 
 
-'Inciencia, Rama, Parche'
-
-Issue, Branch, Pull Request
+## 'Inciencia, Rama, Parche' --> Issue, Branch, Pull Request
 
 1º `git pull`  & `git checkout master`;  to know you are in the master branch and it is updated
 
