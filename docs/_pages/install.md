@@ -39,20 +39,22 @@ ROSnode https://jderobot.github.io/RoboticsAcademy/installation/#generic-infrast
 
 
 'Inciencia, Rama, Parche'
+
 Issue, Branch, Pull Request
-1º git pull  & git checkout master ;  to know you are in the master branch and it is updated
+
+1º `git pull`  & `git checkout master`;  to know you are in the master branch and it is updated
 
 2º Create Issue in your github repository and then you have a issue number  #X
 
-3º Create issue-X branch in local  git checkout -b issue-X
+3º Create issue-X branch in local  `git checkout -b issue-X`
 
 4º git status to know in what branch you are an the files that are changed 
 
-5º git add <file>  with all the files you want to upload
+5º `git add <file>`  with all the files you want to upload
   
-6º when you add all files :  git commit -m "Message with your changes"
+6º when you add all files :  `git commit -m "Message with your changes"`
 
-7º Upload your local branch to the github repository: git push origin issue-X
+7º Upload your local branch to the github repository: `git push origin issue-X`
 
 8º Once you upload your changes in the issue-x branch. Do a Pull request in Github.
 
