@@ -48,7 +48,7 @@ Issue, Branch, Pull Request
 
 3º Create issue-X branch in local  `git checkout -b issue-X`
 
-4º git status to know in what branch you are an the files that are changed 
+4º `git status` to know in what branch you are an the files that are changed 
 
 5º `git add <file>`  with all the files you want to upload
   
